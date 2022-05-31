@@ -1,5 +1,4 @@
 const express = require('express');
-const res = require('express/lib/response');
 const router = express.Router();
 
 router.use(express.json());
@@ -8,14 +7,12 @@ function mostrarPessoas() {
     return listaPessoas;
 }
 
-function mostrarPessoa(id,pessoa){
-    id = req.params.id;
-    pessoa = listaPessoas.find(p => p.id == id);
+function mostrarPessoa(id){
+    const pessoa = listaPessoas.find(p => p.id == id);
     return pessoa;
 }
 
 function criarPessoa(pessoa){
-    pessoa = req.body;
     if (pessoa.nome && pessoa.cpf != "") {
         pessoa.id = listaPessoas.length + 1;
         listaPessoas.push(pessoa);
@@ -48,11 +45,11 @@ router.get("/", (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    res.json(mostrarPessoa());
+    res.json(mostrarPessoa(req.params.id));
 });
 
 router.post('/', (req, res) => {
-    res.json(criarPessoa());
+    res.json(criarPessoa(req.body));
 });
 
 module.exports = {

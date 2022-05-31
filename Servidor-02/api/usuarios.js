@@ -7,6 +7,21 @@ function mostrarUsuarios(){
     return listaUsuarios;
 }
 
+function mostrarUsuario(id){
+    const usuario = listaUsuarios.find(u => u.id == id);
+    return usuario;
+}
+
+function criarUsuario(usuario){
+    if (usuario.nome && usuario.senha != "") {
+        usuario.id = listaUsuarios.length + 1;
+        listaUsuarios.push(usuario);
+        return usuario;
+    } else {
+        return res.status(400).send("Preencha as informações!");
+    }
+}
+
 const listaUsuarios = [
     {
         id:1,
@@ -30,23 +45,16 @@ router.get('/',(req,res) =>{
 });
 
 router.get('/:id',(req,res) =>{
-    const id = req.params.id;
-    const usuario = listaUsuarios.find(u=> u.id == id);
-    res.json(usuario);
+    res.json(mostrarUsuario(req.params.id));
 });
 
 router.post('/', (req, res) => {
-    const usuario = req.body;
-    if (usuario.nome && usuario.senha != "") {
-        usuario.id = listaUsuarios.length + 1;
-        listaUsuarios.push(usuario);
-        res.json(usuario);
-    } else {
-        res.status(400).send("Preencha as informações!")
-    }
+    res.json(criarUsuario(req.body));
 });
 
 module.exports = {
     router,
-    mostrarUsuarios
+    mostrarUsuarios,
+    criarUsuario,
+    mostrarUsuario
 }
