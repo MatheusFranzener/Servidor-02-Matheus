@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const boletos = require('./boletos');
 
 router.use(express.json());
 
@@ -19,6 +20,23 @@ function criarUsuario(usuario){
         return usuario;
     } else {
         return res.status(400).send("Preencha as informações!");
+    }
+}
+
+function editarUsuario(id, usuario) {
+    const index = listaUsuarios.findIndex(u => u.id == id);
+    usuario.id = id;
+    listaUsuarios[index] = usuario;
+    return usuario;
+}
+
+function removerUsuario(id){
+    if(boletos.boletoUsuario(id).length != 0){
+        const index = listaUsuarios.findIndex(u => u.id == id);
+        listaUsuarios.splice(index, 1);
+        res.json(listaUsuarios);
+    } else {
+        return res.status(400).send("O usuário possui boletos!");
     }
 }
 
@@ -52,9 +70,20 @@ router.post('/', (req, res) => {
     res.json(criarUsuario(req.body));
 });
 
+router.put('/:id', (req, res) => {
+    res.json(editarUsuario(req.params.id,req.body));
+});
+
+router.delete('/:id',(req,res)=>{
+    res.json((removerUsuario(req.params.id)))
+})
+
 module.exports = {
     router,
+    boletos,
     mostrarUsuarios,
     criarUsuario,
-    mostrarUsuario
+    mostrarUsuario,
+    editarUsuario,
+    removerUsuario
 }
