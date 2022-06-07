@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const boletos = require('./boletos');
 
 router.use(express.json());
@@ -62,7 +63,14 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id',(req,res)=>{
-
+    const id = req.params.id; 
+    if(boletos.boletoPessoa(id)){
+        res.status(400).send("A pessoa possui boletos!");
+    } else {
+        const index = listaPessoas.findIndex(p => p.id == id);
+        listaPessoas.splice(index, 1);
+        res.json(listaPessoas);
+    }
 })
 
 module.exports = {

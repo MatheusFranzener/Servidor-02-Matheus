@@ -15,18 +15,10 @@ function mostrarBoleto(id) {
     return boleto;
 }
 
-function procurarPessoa(id) {
-    return pessoa.mostrarPessoa(id);
-}
-
-function procurarUsuario(id) {
-    return usuario.mostrarUsuario(id);
-}
-
 function criarBoleto(boleto) {
     if (boleto.valor > 0) {
         if (boleto.id_pessoa) {
-            if (procurarPessoa(boleto.id_pessoa) != null) {
+            if (pessoa.mostrarPessoa(boleto.id_pessoa) != null) {
                 boleto.id = listaBoletos.length + 1;
                 listaBoletos.push(boleto)
                 return boleto;
@@ -34,7 +26,7 @@ function criarBoleto(boleto) {
                 res.status(400).send("A pessoa não existe!")
             }
         } else {
-            if (procurarUsuario(boleto.id_usuario) != null) {
+            if (usuario.mostrarUsuario(boleto.id_usuario) != null) {
                 boleto.id = listaBoletos.length + 1;
                 listaBoletos.push(boleto)
                 return boleto;
@@ -110,7 +102,5 @@ module.exports = {
     criarBoleto,
     boletoPessoa,
     boletoUsuario,
-    procurarPessoa,
-    procurarUsuario,
     editarBoleto
 }
