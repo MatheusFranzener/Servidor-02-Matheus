@@ -13,31 +13,11 @@ function mostrarUsuario(id){
     return usuario;
 }
 
-function criarUsuario(usuario){
-    if (usuario.nome && usuario.senha != "") {
-        usuario.id = listaUsuarios.length + 1;
-        listaUsuarios.push(usuario);
-        return usuario;
-    } else {
-        return res.status(400).send("Preencha as informações!");
-    }
-}
-
 function editarUsuario(id, usuario) {
     const index = listaUsuarios.findIndex(u => u.id == id);
     usuario.id = id;
     listaUsuarios[index] = usuario;
     return usuario;
-}
-
-function removerUsuario(id){
-    if(boletos.boletoUsuario(id).length != 0){
-        const index = listaUsuarios.findIndex(u => u.id == id);
-        listaUsuarios.splice(index, 1);
-        res.json(listaUsuarios);
-    } else {
-        return res.status(400).send("O usuário possui boletos!");
-    }
 }
 
 const listaUsuarios = [
@@ -67,7 +47,14 @@ router.get('/:id',(req,res) =>{
 });
 
 router.post('/', (req, res) => {
-    res.json(criarUsuario(req.body));
+    const usuario = req.body;
+    if (usuario.nome == undefined || usuario.senha == undefined) {
+        res.status(400).send("Preencha as informações!");
+    } else {
+        usuario.id = listaUsuarios.length + 1;
+        listaUsuarios.push(usuario);
+        res.json(usuario);
+    }
 });
 
 router.put('/:id', (req, res) => {
@@ -75,15 +62,20 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id',(req,res)=>{
-    res.json((removerUsuario(req.params.id)))
+    const id = req.params.id; 
+    if(boletos.boletoUsuario(id)){
+        res.status(400).send("O usuário possui boletos!");
+    } else {
+        const index = listaUsuarios.findIndex(u => u.id == id);
+        listaUsuarios.splice(index, 1);
+        res.json(listaUsuarios);
+    }
 })
 
 module.exports = {
     router,
     boletos,
     mostrarUsuarios,
-    criarUsuario,
     mostrarUsuario,
-    editarUsuario,
-    removerUsuario
+    editarUsuario
 }

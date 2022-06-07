@@ -1,6 +1,6 @@
 const express = require('express');
-
 const router = express.Router();
+
 const pessoa = require("./pessoas");
 const usuario = require("./usuarios");
 
@@ -47,21 +47,22 @@ function criarBoleto(boleto) {
     }
 }
 
-function editarBoleto() {
-
+function editarBoleto(id, boleto) {
+    const index = listaBoletos.findIndex(b => b.id == id);
+    boleto.id = id;
+    listaBoletos[index] = boleto;
+    return boleto;
 }
 
 function boletoPessoa(id) {
-    const boletoPessoa = listaBoletos.find(p => p.id_pessoa == id);
+    const boletoPessoa = listaBoletos.find(b => b.id_pessoa == id);
     return boletoPessoa;
 }
 
 function boletoUsuario(id) {
-    const boletoUsuario = listaBoletos.find(p => p.id_usuario == id);
+    const boletoUsuario = listaBoletos.find(b => b.id_usuario == id);
     return boletoUsuario;
 }
-
-
 
 const listaBoletos = [
     {
@@ -96,8 +97,8 @@ router.post('/', (req, res) => {
     res.json(criarBoleto(req.body));
 })
 
-router.put(':id/', (req, res) => {
-
+router.put('/:id', (req, res) => {
+    res.json(editarBoleto(req.params.id,req.body));
 })
 
 module.exports = {
@@ -110,5 +111,6 @@ module.exports = {
     boletoPessoa,
     boletoUsuario,
     procurarPessoa,
-    procurarUsuario
+    procurarUsuario,
+    editarBoleto
 }
