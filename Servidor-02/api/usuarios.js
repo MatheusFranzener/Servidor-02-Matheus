@@ -1,9 +1,35 @@
 const express = require('express');
 const router = express.Router();
 
-const boletos = require('./boletos');
-
 router.use(express.json());
+
+const listaBoletosUsuarios = [
+    {
+        id_boleto : 1,
+        valor: 2,
+        status: "Aberto",
+        id_usuario: 2,
+        nome_pessoa: "Matheus"
+    }
+];
+
+const listaUsuarios = [
+    {
+        id:1,
+        nome:"Gabriel",
+        senha:"g123"
+    },
+    {
+        id:2,
+        nome:"José",
+        senha:"j123"
+    },
+    {
+        id:3,
+        nome:"Cleiton",
+        senha:"c123"
+    }
+];
 
 function mostrarUsuarios(){
     return listaUsuarios;
@@ -14,6 +40,12 @@ function mostrarUsuario(id){
     return usuario;
 }
 
+function criarUsuario(usuario){
+    usuario.id = listaUsuarios.length + 1;
+    listaUsuarios.push(usuario);
+    return usuario;
+}
+
 function editarUsuario(id, usuario) {
     const index = listaUsuarios.findIndex(u => u.id == id);
     usuario.id = id;
@@ -21,23 +53,16 @@ function editarUsuario(id, usuario) {
     return usuario;
 }
 
-const listaUsuarios = [
-    {
-        id:1,
-        nome:"Gabriel",
-        senha:"g123"
-    },
-    {
-        id:2,
-        nome:"Ramos",
-        senha:"r123"
-    },
-    {
-        id:3,
-        nome:"Antonio",
-        senha:"a123"
-    }
-];
+function boletoUsuario(id){
+    const boletos = listaBoletosUsuarios.find(u => u.id_usuario == id);
+    return boletos;
+}
+
+function excluirUsuario(id){
+    const usuario = listaUsuarios.findIndex(u => u.id == id);
+    listaUsuarios.splice(usuario, 1);
+    return listaUsuarios;
+}
 
 router.get('/',(req,res) =>{
     res.send(mostrarUsuarios());
@@ -50,11 +75,9 @@ router.get('/:id',(req,res) =>{
 router.post('/', (req, res) => {
     const usuario = req.body;
     if (usuario.nome == undefined || usuario.senha == undefined) {
-        res.status(400).send("Preencha as informações!");
+        res.status(400).send("Preencha os campos!");
     } else {
-        usuario.id = listaUsuarios.length + 1;
-        listaUsuarios.push(usuario);
-        res.json(usuario);
+        res.send(criarUsuario(usuario));
     }
 });
 
@@ -64,19 +87,20 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id',(req,res)=>{
     const id = req.params.id; 
-    if(boletos.boletoUsuario(id)){
-        res.status(400).send("O usuário possui boletos!");
+    if(boletoUsuario(id)){
+        res.status(400).send("O usuário possui boletos.");
     } else {
-        const index = listaUsuarios.findIndex(u => u.id == id);
-        listaUsuarios.splice(index, 1);
-        res.json(listaUsuarios);
+        res.json(excluirUsuario(id));
     }
 })
 
 module.exports = {
     router,
-    boletos,
+    listaBoletosUsuarios,
     mostrarUsuarios,
     mostrarUsuario,
-    editarUsuario
+    criarUsuario,
+    editarUsuario,
+    boletoUsuario,
+    excluirUsuario
 }

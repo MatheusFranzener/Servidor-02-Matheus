@@ -17,8 +17,6 @@ app.use('/api/usuarios/', usuarios.router);
 const boletos = require("./api/boletos");
 app.use('/api/boletos/', boletos.router);
 
-
-
 app.listen(port, () => {
     console.log('Example app listening at http://localhost:3000');
 })

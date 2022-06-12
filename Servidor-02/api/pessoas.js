@@ -1,9 +1,35 @@
 const express = require('express');
 const router = express.Router();
 
-const boletos = require('./boletos');
-
 router.use(express.json());
+
+const listaBoletosPessoas = [
+    {
+        id_boleto : 2,
+        valor: 5,
+        status: "Fechado",
+        id_pessoa: 1,
+        nome_pessoa: "Matheus"
+    }
+];
+
+const listaPessoas = [
+    {
+        id: 1,
+        nome: "Matheus",
+        cpf: "123"
+    },
+    {
+        id: 2,
+        nome: "Franzener",
+        cpf: "321"
+    },
+    {
+        id: 3,
+        nome: "Hohmann",
+        cpf: "213"
+    }
+];
 
 function mostrarPessoas() {
     return listaPessoas;
@@ -14,6 +40,12 @@ function mostrarPessoa(id) {
     return pessoa;
 }
 
+function criarPessoa(pessoa){
+    pessoa.id = listaPessoas.length + 1;
+    listaPessoas.push(pessoa);
+    return pessoa;
+}
+
 function editarPessoa(id, pessoa) {
     const index = listaPessoas.findIndex(p => p.id == id);
     pessoa.id = id;
@@ -21,23 +53,16 @@ function editarPessoa(id, pessoa) {
     return pessoa;
 }
 
-const listaPessoas = [
-    {
-        id: 1,
-        nome: "Matheus",
-        cpf: "123"
-    },
-    {
-        id: 2,
-        nome: "Felipe",
-        cpf: "321"
-    },
-    {
-        id: 3,
-        nome: "Kenzo",
-        cpf: "213"
-    }
-];
+function boletoPessoa(id) {
+    const boletos = listaBoletosPessoas.find(p => p.id_pessoa == id);
+    return boletos;
+}
+
+function excluirPessoa(id){
+    const pessoa = listaPessoas.findIndex(p => p.id == id);
+    listaPessoas.splice(pessoa,1);
+    return listaPessoas;
+}
 
 router.get("/", (req, res) => {
     res.json(mostrarPessoas());
@@ -52,9 +77,7 @@ router.post('/', (req, res) => {
     if (pessoa.nome == undefined || pessoa.cpf == undefined) {
         res.status(400).send("Preencha os campos!");
     } else {
-        pessoa.id = listaPessoas.length + 1;
-        listaPessoas.push(pessoa);
-        res.json(pessoa);
+        res.send(criarPessoa(pessoa));
     }
 });
 
@@ -63,20 +86,21 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id',(req,res)=>{
-    const id = req.params.id; 
-    if(boletos.boletoPessoa(id)){
-        res.status(400).send("A pessoa possui boletos!");
-    } else {
-        const index = listaPessoas.findIndex(p => p.id == id);
-        listaPessoas.splice(index, 1);
-        res.json(listaPessoas);
-    }
+    const id = req.params.id;
+    if(boletoPessoa(id)){
+    res.status(400).send("A pessoa possui boletos.");
+  } else {
+      res.json(excluirPessoa(id));
+  }
 })
 
 module.exports = {
     router,
-    boletos,
+    listaBoletosPessoas,
     mostrarPessoas,
     mostrarPessoa,
-    editarPessoa
+    criarPessoa,
+    editarPessoa,
+    boletoPessoa,
+    excluirPessoa
 }
