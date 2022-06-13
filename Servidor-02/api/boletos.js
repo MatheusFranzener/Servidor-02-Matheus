@@ -78,9 +78,21 @@ function editarBoleto(id, boleto) {
         listaBoletos.push(e);
     });
 
-    const index = listaBoletos.findIndex(b => b.id == id);
+    const boletoPessoa = listaBoletos.find(p => p.id_pessoa == id);
+    const boletoUsuario = listaBoletos.find(p => p.id_usuario == id);
+
     boleto.id = id;
-    listaBoletos[index] = boleto;
+
+    let index;
+
+    if (boletoPessoa != null) {
+        index = pessoa.listaBoletosPessoas.findIndex(p => p.id_pessoa == id);
+        pessoa.listaBoletosPessoas[index] = boleto;
+    } else {
+        index = usuario.listaBoletosUsuarios.findIndex(p => p.id_usuario == id);
+        usuario.listaBoletosUsuarios[index] = boleto;
+    }
+
     return boleto;
 }
 
