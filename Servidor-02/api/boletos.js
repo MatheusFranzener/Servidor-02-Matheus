@@ -32,8 +32,14 @@ function editarBoleto(id, boleto) {
 }
 
 function boletoPessoa(id){
-    const boletoPessoa = boletos.listaBoletos.find(b => b.id_pessoa == id);
-    return boletoPessoa;
+    const listaBoletosPessoa = [];
+    
+    boletos.listaBoletos.forEach(function (e){
+        const boletoPessoa = boletos.listaBoletos.find(b => b.id_pessoa == id);
+        listaBoletosPessoa.push(boletoPessoa);
+    }) 
+
+    return listaBoletosPessoa;
 }
 
 function buscaPessoa(id) {
