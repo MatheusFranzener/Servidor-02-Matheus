@@ -23,11 +23,9 @@ function criarBoleto(boleto) {
 }
 
 function editarBoleto(id, boleto) {
-    let index;
-    
     boleto.id = id;
-    index = boleto.listaBoletos.findIndex(p => p.id == id);
-    boleto.listaBoletos[index] = boleto;
+    const index = boletos.listaBoletos.findIndex(p => p.id == id);
+    boletos.listaBoletos[index] = boleto;
     return boleto;    
 }
 
@@ -35,8 +33,9 @@ function boletoPessoa(id){
     const listaBoletosPessoa = [];
     
     boletos.listaBoletos.forEach(function (e){
-        const boletoPessoa = boletos.listaBoletos.find(b => b.id_pessoa == id);
-        listaBoletosPessoa.push(boletoPessoa);
+        if(e.id_pessoa == id){
+        listaBoletosPessoa.push(e);
+        }
     }) 
 
     return listaBoletosPessoa;
@@ -78,10 +77,7 @@ router.post('/', (req, res) => {
 })
 
 router.put('/:id', (req, res) => {
-    res.json(editarBoleto(req.params.id, req.body));
-    if (editarBoleto(req.params.id, req.body) == 1) {
-        res.status(400).send("O boleto não existe!")
-    }
+    res.send(editarBoleto(req.params.id, req.body));
 });
 
 module.exports = {
@@ -89,6 +85,5 @@ module.exports = {
     mostrarBoletos,
     criarBoleto,
     mostrarBoleto,
-    boletoPessoa,
-    editarBoleto,
+    editarBoleto
 }

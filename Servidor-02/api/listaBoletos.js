@@ -1,6 +1,6 @@
 const listaBoletos = [
     {
-        id:1,
+        id_boleto:1,
         valor:2,
         id_pessoa:1,
         id_usuario:1,

@@ -46,8 +46,8 @@ function editarPessoa(id, pessoa) {
 }
 
 function boletoPessoa(id) {
-    const boletos2 = boletos.listaBoletos.find(p => p.id_pessoa == id);
-    return boletos2;
+    const boletoDaPessoa = boletos.listaBoletos.find(p => p.id_pessoa == id);
+    return boletoDaPessoa;
 }
 
 function excluirPessoa(id) {
