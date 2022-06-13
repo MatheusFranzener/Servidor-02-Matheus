@@ -1,17 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-router.use(express.json());
+const boletos = require('./listaBoletos');
 
-const listaBoletosPessoas = [
-    {
-        id_boleto : 1,
-        valor: 5,
-        status: "Fechado",
-        id_pessoa: 1,
-        nome_pessoa: "Matheus"
-    }
-];
+router.use(express.json());
 
 const listaPessoas = [
     {
@@ -40,7 +32,7 @@ function mostrarPessoa(id) {
     return pessoa;
 }
 
-function criarPessoa(pessoa){
+function criarPessoa(pessoa) {
     pessoa.id = listaPessoas.length + 1;
     listaPessoas.push(pessoa);
     return pessoa;
@@ -54,13 +46,13 @@ function editarPessoa(id, pessoa) {
 }
 
 function boletoPessoa(id) {
-    const boletos = listaBoletosPessoas.find(p => p.id_pessoa == id);
-    return boletos;
+    const boletos2 = boletos.listaBoletos.find(p => p.id_pessoa == id);
+    return boletos2;
 }
 
-function excluirPessoa(id){
+function excluirPessoa(id) {
     const pessoa = listaPessoas.findIndex(p => p.id == id);
-    listaPessoas.splice(pessoa,1);
+    listaPessoas.splice(pessoa, 1);
     return listaPessoas;
 }
 
@@ -82,21 +74,20 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    res.json(editarPessoa(req.params.id,req.body));
+    res.json(editarPessoa(req.params.id, req.body));
 });
 
-router.delete('/:id',(req,res)=>{
+router.delete('/:id', (req, res) => {
     const id = req.params.id;
-    if(boletoPessoa(id)){
-    res.status(400).send("A pessoa possui boletos.");
-  } else {
-      res.json(excluirPessoa(id));
-  }
+    if (boletoPessoa(id)) {
+        res.status(400).send("A pessoa possui boletos.");
+    } else {
+        res.json(excluirPessoa(id));
+    }
 })
 
 module.exports = {
     router,
-    listaBoletosPessoas,
     mostrarPessoas,
     mostrarPessoa,
     criarPessoa,

@@ -1,17 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-router.use(express.json());
+const boletos = require('./listaBoletos');
 
-const listaBoletosUsuarios = [
-    {
-        id_boleto : 2,
-        valor: 5,
-        status: "Aberto",
-        id_usuario: 2,
-        nome_pessoa: "Matheus"
-    }
-];
+router.use(express.json());
 
 const listaUsuarios = [
     {
@@ -54,8 +46,8 @@ function editarUsuario(id, usuario) {
 }
 
 function boletoUsuario(id){
-    const boletos = listaBoletosUsuarios.find(u => u.id_usuario == id);
-    return boletos;
+    const boletos2 = boletos.listaBoletos.find(u => u.id_usuario == id);
+    return boletos2;
 }
 
 function excluirUsuario(id){
@@ -96,7 +88,6 @@ router.delete('/:id',(req,res)=>{
 
 module.exports = {
     router,
-    listaBoletosUsuarios,
     mostrarUsuarios,
     mostrarUsuario,
     criarUsuario,
