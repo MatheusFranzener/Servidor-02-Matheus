@@ -88,9 +88,11 @@ function editarBoleto(id, boleto) {
     if (boletoPessoa != null) {
         index = pessoa.listaBoletosPessoas.findIndex(p => p.id_pessoa == id);
         pessoa.listaBoletosPessoas[index] = boleto;
-    } else {
+    } else if(boletoUsuario != null) {
         index = usuario.listaBoletosUsuarios.findIndex(p => p.id_usuario == id);
         usuario.listaBoletosUsuarios[index] = boleto;
+    } else {
+        return ("O boleto não existe!");
     }
 
     return boleto;
@@ -161,6 +163,9 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
     res.json(editarBoleto(req.params.id, req.body));
+    if(editarBoleto(req.params.id, req.body) == 1){
+        res.status(400).send("O boleto não existe!")
+    }
 });
 
 module.exports = {

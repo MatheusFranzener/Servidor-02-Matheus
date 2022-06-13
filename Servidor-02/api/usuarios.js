@@ -6,7 +6,7 @@ router.use(express.json());
 const listaBoletosUsuarios = [
     {
         id_boleto : 2,
-        valor: 2,
+        valor: 5,
         status: "Aberto",
         id_usuario: 2,
         nome_pessoa: "Matheus"
